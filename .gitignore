@@ -1,0 +1,14 @@
+node_modules
+.idea
+.envrc
+build
+cert
+.vscode
+.env*
+s3Config
+
+# Coverage directory used by tools like istanbul
+coverage
+
+# nyc test coverage
+.nyc_output

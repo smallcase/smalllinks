@@ -1,0 +1,86 @@
+{
+  "name": "url-shortener",
+  "version": "3.0.0",
+  "description": "Simple URL shortener",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "lint:debug": "eslint .",
+    "lint:fix:debug": "eslint . --fix",
+    "lint": "eslint --quiet .",
+    "lint:fix": "eslint --quiet . --fix",
+    "test": "npm run lint && npm run format:check && npm run test:unit",
+    "coverage": "nyc --reporter=html mocha ./test/unit/index.spec.js",
+    "postcoverage": "open coverage/index.html",
+    "test:unit": "mocha ./test/unit/index.spec.js",
+    "format": "prettier --write \"./**/*.{js,json}\"",
+    "format:check": "prettier --check \"./**/*.{js,json}\"",
+    "codefix": "npm run format && npm run lint:fix",
+    "commit": "git-cz",
+    "commitAll": "git add . && git-cz",
+    "pre:release": "HUSKY_SKIP_HOOKS=1 standard-version --prerelease alpha",
+    "patch:release": "HUSKY_SKIP_HOOKS=1 standard-version --release-as patch",
+    "minor:release": "HUSKY_SKIP_HOOKS=1 standard-version --release-as minor",
+    "major:release": "HUSKY_SKIP_HOOKS=1 standard-version --release-as major"
+  },
+  "engines": {
+    "node": "12.16.2",
+    "npm": ">=6.14.0 <7.0.0"
+  },
+  "author": "Rishabh Rawat",
+  "license": "ISC",
+  "dependencies": {
+    "bunyan": "^1.8.15",
+    "fastify": "^3.8.0",
+    "fastify-cors": "^5.1.0",
+    "fastify-helmet": "^5.0.3",
+    "fastify-swagger": "^3.5.0",
+    "kafka-node": "^5.0.0",
+    "nanoid": "^2.0.3",
+    "pg": "^8.5.1",
+    "redis": "^3.1.2"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^9.1.2",
+    "@commitlint/config-conventional": "^9.1.2",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "commitizen": "^4.1.2",
+    "cz-conventional-changelog": "^3.2.0",
+    "eslint": "^7.7.0",
+    "eslint-config-airbnb": "^18.2.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react": "^7.20.6",
+    "eslint-plugin-standard": "^4.0.1",
+    "husky": "^4.2.5",
+    "mocha": "^8.2.1",
+    "nodemon": "^2.0.7",
+    "nyc": "^15.1.0",
+    "prettier": "^2.0.5",
+    "proxyquire": "^2.1.3",
+    "sinon": "^9.2.1",
+    "standard-version": "^9.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rishabh570/sc-url-shortener.git"
+  },
+  "keywords": [
+    "url shortener",
+    "nodejs",
+    "kafka",
+    "postgres",
+    "redis"
+  ],
+  "bugs": {
+    "url": "https://github.com/Rishabh570/sc-url-shortener/issues"
+  },
+  "homepage": "https://github.com/Rishabh570/sc-url-shortener#readme"
+}

@@ -1,0 +1,48 @@
+{
+  "types": [
+    {
+      "type": "feat",
+      "section": "Features"
+    },
+    {
+      "type": "fix",
+      "section": "Bug Fixes"
+    },
+    {
+      "type": "chore",
+      "hidden": true
+    },
+    {
+      "type": "docs",
+      "section": "Documentation"
+    },
+    {
+      "type": "style",
+      "section": "Style changes"
+    },
+    {
+      "type": "refactor",
+      "section": "Refactors"
+    },
+    {
+      "type": "perf",
+      "section": "Performance"
+    },
+    {
+      "type": "test",
+      "section": "Changes in test"
+    },
+    {
+      "type": "ci",
+      "section": "CI changes"
+    },
+    {
+      "type": "build",
+      "section": "Changes in build process"
+    },
+    {
+      "type": "revert",
+      "section": "Reverted"
+    }
+  ]
+}
