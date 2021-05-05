@@ -1,0 +1,7 @@
+test/*
+*.yml
+*.sh
+*.json
+node_modules/*
+*.md
+*.png

@@ -1,0 +1,52 @@
+version: "3"
+services:
+  web:
+    container_name: smalllinks
+    env_file: .example.env
+    build: .
+    ports:
+      - "8201:8201"
+    depends_on:
+      - mypostgresdb
+      - redis
+      - kafka
+    environment:
+      DB_HOST: mypostgresdb
+      KAFKA_HOST: 'kafka:9092'
+      REDIS_HOST: redis
+    restart: unless-stopped
+  redis:
+    container_name: redis-smalllinks
+    image: 'redis:6.2.5-alpine'
+    restart: unless-stopped
+  mypostgresdb:
+    container_name: postgres-smalllinks
+    image: 'postgres:10.4'
+    env_file: .example.env
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+  zookeeper:
+    container_name: zookeeper-smalllinks
+    image: 'jplock/zookeeper:3.5.5'
+    ports:
+      - '50000:2181'
+    restart: unless-stopped
+  kafka:
+    container_name: kafka-smalllinks
+    image: 'wurstmeister/kafka'
+    env_file: .example.env
+    ports:
+      - '50001:9092'
+      - '50002:9093'
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENERS: 'INTERNAL://:9092'
+      KAFKA_ADVERTISED_LISTENERS: 'INTERNAL://:9092'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'INTERNAL:PLAINTEXT'
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+    restart: unless-stopped
