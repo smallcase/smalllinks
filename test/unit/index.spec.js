@@ -195,6 +195,7 @@ describe('Testing URL Shortener', () => {
     describe('Testing shortUrlGenerator', function () {
       let findByShortUrlStub;
       let isTTLExpiredStub;
+      let deleteStaleDataStub;
       let getAsyncStub;
       const shortUrlTest = 'abcde';
       let longUrlTest = 'veryLongUrl';
@@ -207,18 +208,22 @@ describe('Testing URL Shortener', () => {
         findByShortUrlStub = sinon.stub(utils.dbService, 'findByShortUrl');
         // Stub isTTLExpired of dbService
         isTTLExpiredStub = sinon.stub(utils.dbService, 'isTTLExpired');
+        // Stub isTTLExpired of dbService
+        deleteStaleDataStub = sinon.stub(utils.dbService, 'deleteStaleData');
       });
 
       beforeEach(function () {
         findByShortUrlStub.reset();
         isTTLExpiredStub.reset();
         getAsyncStub.reset();
+        deleteStaleDataStub.reset();
       });
 
       after(function () {
         utils.redisUtil.getAsync.restore();
         utils.dbService.findByShortUrl.restore();
         utils.dbService.isTTLExpired.restore();
+        deleteStaleDataStub.restore();
       });
 
       it('Check when short Url generation is successful in first try', async function () {
@@ -253,6 +258,7 @@ describe('Testing URL Shortener', () => {
         it('Check when TTL is found expired in first try', async function () {
           getAsyncStub.withArgs(redisShortUrlKey).returns(shortUrlTest);
           isTTLExpiredStub.withArgs(shortUrlTest).returns(true);
+          deleteStaleDataStub.withArgs(shortUrlTest).returns(true);
 
           const actualResult = await utils.shortUrlGenerator.generateShortUrl();
           expect(getAsyncStub.calledOnce).to.be.true;
@@ -263,6 +269,7 @@ describe('Testing URL Shortener', () => {
         it('Check when TTL is not found expired in first try', async function () {
           getAsyncStub.withArgs(redisShortUrlKey).returns(shortUrlTest);
           isTTLExpiredStub.withArgs(shortUrlTest).onCall(0).returns(false).withArgs(shortUrlTest).onCall(1).returns(true);
+          deleteStaleDataStub.withArgs(shortUrlTest).returns(true);
 
           const actualResult = await utils.shortUrlGenerator.generateShortUrl();
           expect(getAsyncStub.calledTwice).to.be.true;
@@ -276,6 +283,7 @@ describe('Testing URL Shortener', () => {
           getAsyncStub.withArgs(redisShortUrlKey).returns(null);
           findByShortUrlStub.withArgs(shortUrlTest).returns({ rows: [{ longUrl: longUrlTest, id: shortUrlTest, date: '2020-12-25' }] });
           isTTLExpiredStub.withArgs(shortUrlTest).returns(true);
+          deleteStaleDataStub.withArgs(shortUrlTest).returns(true);
 
           const actualResult = await utils.shortUrlGenerator.generateShortUrl();
           expect(getAsyncStub.calledOnce).to.be.true;
