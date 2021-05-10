@@ -1,24 +1,16 @@
-# URL Shortener
-
-A simple URL shortener built with nodejs, postgreSQL, redis and kafka.
-
 <div>
 <img src="/url-shortner.png" width="400px" height="200px">
 </div>
 
-## Key Points
+# URL Shortener
 
-Usage | PostgreSQL Table
---- | ---
-Long URL <> Short URL mapping | `shortenedLinks`
-Short Key <> Expiry date mapping | `shortUrlExpiry`
+![GitHub issues](https://img.shields.io/github/issues/rishabh570/sc-url-shortener)
+[![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://github.com/tterb/atomic-design-ui/blob/master/LICENSEs)
 
-- It uses [nanoid](https://www.npmjs.com/package/nanoid) for short key generation which doesn't guarantee unique key generation in itself. So, retries are performed to land upon a unique short key that is not already utilized.
-- There is no cleanup service as of now to purge expired mappings. Short keys can get simply reused if they are expired.
-- URL mappings are cached in redis for faster retrieval.
-- For tracking purposes, a kafka event is triggered on topic `shortUrlOpened` whenever a short URL is clicked/opened.
+A simple URL shortener utility built with nodejs, postgreSQL, redis and kafka.
 
-## Getting Started
+
+## Installation 
 
 - Clone the project
 
@@ -46,22 +38,32 @@ npm run dev
 ```
 
 Open [http://localhost:8201/status](http://localhost:8201/status) with your favorite browser to check the status of the service.
+ 
+## Running Tests
 
-## How To Use
+To run tests, run the following command
+
+```bash
+  npm run test
+```
+
+  
+## Usage/Examples
 
 ### To get the short URL
 
 ```bash
-$ curl -d '{"url": "<LONG-URL>"}' -H 'Content-Type: application/json' http://localhost:8201/shortenUrl
+$ curl -d '{"url": "<LONG-URL>"}' -H 'Content-Type: application/json' <BASE_URL>/shortenUrl
 ```
 
 or, you can explicitly provide the TTL (time-to-live) for the short URL. By default, TTL is set to 2 years ahead.
 
 ```bash
-$ curl -d '{"url": "<LONG-URL>", "ttl": "2020-12-25"}' -H 'Content-Type: application/json' http://localhost:8201/shortenUrl
+$ curl -d '{"url": "<LONG-URL>", "ttl": "2020-12-25"}' -H 'Content-Type: application/json' <BASE_URL>/shortenUrl
 ```
 
 Response:
+
 ```json
 {
     "shortUrl":"<SHORT-URL>",
@@ -72,10 +74,11 @@ Response:
 ### To get the long URL
 
 ```bash
-$ curl -i -H 'Content-Type: application/json' http://localhost:8201/<SHORT-URL>
+$ curl -i -H 'Content-Type: application/json' <BASE_URL>/<SHORT-URL>
 ```
 
 Response:
+
 ```
 HTTP/1.1 302 OK
 Date: Thu, 02 Jul 2020 10:31:09 GMT
@@ -83,8 +86,24 @@ Transfer-Encoding: chunked
 Connection: keep-alive
 Location: <LONG-URL>
 ```
+  
+## FAQ
 
-## Contributions
+#### How a short key is generated?
+
+It uses `nanoId` to generate a random string of predefined length.
+
+#### How does it ensure the uniqueness of the key?
+
+- `nanoId` doesn't ensure the uniqueness that's why there is an expiry date set at the time of short URL creation. A short key is open for reuse once the expiry date is hit.
+- There are retries performed if it lands upon a non-expired short key during the random key generation process.
+- Retries are capped and can be tweaked as per the requirement.
+
+#### Does it support Analytics?
+
+It uses Kafka to send events whenever a short URL is clicked. This gives the flexibility of plugging your own analytics service.
+
+## Contributing
 
 This project is open for any type of contribution. Feel free to open an issue if you have any query or found a bug.
 
@@ -93,3 +112,9 @@ This project is open for any type of contribution. Feel free to open an issue if
 Licensed under the MIT License, Copyright © 2021
 
 See [LICENSE](https://gitlab.com/rishabhrawat570/url-shortener/-/blob/development/LICENSE) for more information.
+
+## Used By
+
+This project is used by the following companies:
+
+- Smallcase Technologies Pvt Ltd
