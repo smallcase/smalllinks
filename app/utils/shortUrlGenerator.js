@@ -20,7 +20,7 @@ module.exports = (nanoid, redisUtil, dbService) => {
         if (isShortUrlTaken !== null) {
           if (await dbService.isTTLExpired(shortUrl)) {
             // delete the already existing entries in the DB for shortUrl
-            await dbService.deleteStaleData(shortUrl);
+            await dbService.deleteStaleData(shortUrl, redisUtil);
             return shortUrl;
           }
         }

@@ -1,4 +1,4 @@
-const { postgres } = require('../../config');
+const { postgres, redisConfig } = require('../../config');
 
 module.exports = (logger, pool) => {
   return {
@@ -69,7 +69,8 @@ module.exports = (logger, pool) => {
         throw err;
       }
     },
-    async deleteStaleData(shortUrl) {
+    async deleteStaleData(shortUrl, redisUtil) {
+      // delete stale data from db
       await this.query({
         text: `DELETE FROM "${postgres.shortenedLinksTable}" WHERE "id" = $1;`,
         values: [shortUrl],
@@ -78,6 +79,11 @@ module.exports = (logger, pool) => {
         text: `DELETE FROM "${postgres.shortUrlExpiryTable}" WHERE "id" = $1;`,
         values: [shortUrl],
       });
+
+      // delete stale data from redis
+      const longUrl = await redisUtil.getAsync(`${redisConfig.shortenerKeyPrefix}${shortUrl}`);
+      await redisUtil.delAsync(`${redisConfig.shortenerKeyPrefix}${shortUrl}`);
+      await redisUtil.delAsync(`${redisConfig.shortenerKeyPrefix}${longUrl}`);
     },
     async isTTLExpired(shortUrl) {
       try {
