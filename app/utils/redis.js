@@ -4,5 +4,6 @@ module.exports = (redisClient) => {
   return {
     getAsync: promisify(redisClient.get).bind(redisClient),
     setAsync: promisify(redisClient.set).bind(redisClient),
+    delAsync: promisify(redisClient.del).bind(redisClient),
   };
 };

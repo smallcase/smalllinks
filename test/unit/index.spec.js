@@ -24,6 +24,7 @@ describe('Testing URL Shortener', () => {
       on() {},
       get() {},
       set() {},
+      del() {},
     });
 
     sinon.stub(pg, 'Pool').returns({
