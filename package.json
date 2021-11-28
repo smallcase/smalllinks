@@ -35,7 +35,7 @@
     "fastify": "^3.8.0",
     "fastify-cors": "^5.1.0",
     "fastify-helmet": "^5.0.3",
-    "fastify-swagger": "^3.5.0",
+    "fastify-swagger": "^4.12.5",
     "kafka-node": "^5.0.0",
     "nanoid": "^3.1.25",
     "pg": "^8.5.1",
